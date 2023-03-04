@@ -1,0 +1,10 @@
+# 数据库信息
+mysql:
+  host: localhost
+  port: 3306
+  user: root
+  pass: root
+  database: syncme
+  # 表名前缀, 如填写 syncme_
+  # 则将会创建表 syncme_inventory 等
+  table-prefix: ''
