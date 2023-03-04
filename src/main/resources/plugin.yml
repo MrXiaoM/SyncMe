@@ -1,0 +1,10 @@
+name: SyncMe
+main: top.mrxiaom.syncme.SyncMe
+version: ${version}
+api-version: 1.13
+authors: [ MrXiaoM ]
+description: Sync all player data between servers.
+commands:
+  syncme:
+    description: SyncMe main commands
+    aliases: [ sync, sm ]
