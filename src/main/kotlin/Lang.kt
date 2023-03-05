@@ -64,7 +64,7 @@ enum class Lang(
         return colored.getOrElse(this) {
             yaml.set(configKey, s)
             defaultText.color()
-        }
+        }.replaceArguments(args)
     }
 
     fun list(vararg args: String): List<String> {
@@ -77,7 +77,15 @@ enum class Lang(
             defaultText.color().split("\n").also {
                 coloredList[this] = it
             }
+        }.map { it.replaceArguments(args) }
+    }
+
+    private fun String.replaceArguments(args: Array<out String>): String {
+        var str = this
+        for(i in args.indices) {
+            str = replace("\$$i", args[i])
         }
+        return str
     }
 
     companion object {
