@@ -5,19 +5,17 @@ import org.bukkit.entity.Player
 import top.mrxiaom.syncme.nms.INMS
 
 class NMS_v1_16_R3 : INMS {
-    override fun Player.adancement(): String {
-        val p = this as CraftPlayer
-        p.handle.advancementData.data
+    override fun getAdvancements(p: Player): String {
+        val player = p as CraftPlayer
+        player.handle.advancementData.data
 
         TODO("Not yet implemented")
     }
 
-    override fun Player.adancement(s: String) {
-        val p = this as CraftPlayer
-        p.handle.advancementData.data
+    override fun setAdvancements(p: Player, s: String) {
+        val player = p as CraftPlayer
+        player.handle.advancementData.data
 
         TODO("Not yet implemented")
     }
-
-
 }
