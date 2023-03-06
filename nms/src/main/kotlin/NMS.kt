@@ -5,9 +5,11 @@ import top.mrxiaom.syncme.nms.v1_16_R3.NMS_v1_16_R3
 
 object NMS {
     val version = Bukkit.getServer()::class.java.`package`.name.substring(23);
-    private lateinit var current: INMS
+    private lateinit var _current: INMS
+    val current
+        get() = _current
     fun init(): Boolean {
-        current = when(version) {
+        _current = when(version) {
             "v1_16_3" -> NMS_v1_16_R3()
             else -> return false
         }
