@@ -15,7 +15,7 @@ import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.jvm.jvmErasure
 
 object CommandManager {
-    var helpMessage = ""
+    var showHelpWhilePermDeny = false
     val parsedCommands = mutableListOf<ParsedCommand>()
     fun onCommand(
         sender: CommandSender,
@@ -88,12 +88,6 @@ object CommandManager {
         println("[CommandManager] $count commands from ${T::class.simpleName} have been registered.")
     }
 
-    fun parseHelpMessage(key: String): String {
-        if (key.startsWith("*")) {
-            TODO("等待编写语言系统")
-        } else return key.color()
-    }
-
     fun generateHelpMessages(p: Permissible): List<String> =
         Lang.COMMAND__HELP.list(
             SyncMe.description.version,
@@ -153,14 +147,16 @@ class ParsedCommand(
         params.filterIsInstance<EnumParamType>().firstOrNull()?.apply {
             sender.sendMessage(
                 when (this) {
-                    STRING -> Lang.COMMAND__ERROR__NO_PERMISSION
-                    NULL -> Lang.COMMAND__ERROR__NO_PERMISSION
+                    STRING -> if (CommandManager.showHelpWhilePermDeny) null
+                    else Lang.COMMAND__ERROR__NO_PERMISSION
+
+                    NULL -> null
                     PLAYER -> Lang.COMMAND__ERROR__NO_PLAYER
                     PLAYER_ONLINE -> Lang.COMMAND__ERROR__PLAYER_NOT_ONLINE
                     INT -> Lang.COMMAND__ERROR__NOT_INTEGER
                     DOUBLE -> Lang.COMMAND__ERROR__NOT_DOUBLE
                     BOOLEAN -> Lang.COMMAND__ERROR__NOT_BOOLEAN
-                }.get()
+                }?.get() ?: CommandManager.generateHelpMessages(sender).joinToString("\n")
             )
             return
         }

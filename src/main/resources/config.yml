@@ -8,3 +8,5 @@ mysql:
   # 表名前缀, 如填写 syncme_
   # 则将会创建表 syncme_inventory 等
   table-prefix: ''
+# 玩家执行命令没有权限的时候是否不显示权限不足提示而显示帮助命令
+always-show-help-message: true

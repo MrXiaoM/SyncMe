@@ -66,6 +66,7 @@ object SyncMe : JavaPlugin(), CoroutineScope {
     override fun reloadConfig() {
         saveDefaultConfig()
         super.reloadConfig()
+        CommandManager.showHelpWhilePermDeny = config.getBoolean("always-show-help-message")
         if (!sqlConnected || reconnect) {
             closeSQLConnection()
             SQLHelper.connectToMySQL(
