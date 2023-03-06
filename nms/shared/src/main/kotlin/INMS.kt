@@ -1,5 +1,6 @@
 package top.mrxiaom.syncme.nms
 
+import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
@@ -105,4 +106,12 @@ interface INMS {
             p.addPotionEffect(PotionEffect(type, duration, amplifier, isAmbient))
         }
     }
+
+    /**
+     * 从离线玩家加载玩家实例
+     *
+     * Thanks [OpenInv](https://github.com/lishid/OpenInv/blob/1c579564bc39da0b6c6bd52d1bc164d7b4d9b2d9/internal/v1_16_R3/src/main/java/com/lishid/openinv/internal/v1_16_R3/PlayerDataManager.java#L81-L116) for the amazing solution.
+     */
+    fun loadPlayer(p: OfflinePlayer): Player?
+    fun savePlayer(p: Player)
 }
