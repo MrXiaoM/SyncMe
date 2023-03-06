@@ -38,4 +38,26 @@ object DatabaseManager {
         connection = conn
         TablePlayerData.check(conn)
     }
+
+    enum class Type {
+        ADVANCEMENTS,
+        INVENTORY,
+        ENDERCHEST,
+        POTIONS,
+        LEVEL,
+        STATISTIC;
+
+        companion object {
+            val ALL
+                get() = values()
+            val ESSENTIAL
+                get() = arrayOf(INVENTORY, ENDERCHEST, POTIONS, LEVEL)
+
+            fun parse(s: String): Array<Type> = when (s.lowercase()) {
+                "all" -> ALL
+                "essential" -> ESSENTIAL
+                else -> values().filter { it.name.lowercase() == s }.toTypedArray()
+            }
+        }
+    }
 }
