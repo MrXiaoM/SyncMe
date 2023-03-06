@@ -47,6 +47,8 @@ tasks {
         ).forEach {
             relocate(it.first, "top.mrxiaom.syncme.libs.${it.second}")
         }
+
+        minimize()
     }
     processResources {
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
