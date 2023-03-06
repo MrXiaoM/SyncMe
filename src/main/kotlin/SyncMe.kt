@@ -6,22 +6,13 @@ import kotlinx.coroutines.cancel
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
-import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
-import org.bukkit.potion.PotionEffect
-import org.bukkit.potion.PotionEffectType
-import org.bukkit.util.io.BukkitObjectInputStream
-import org.bukkit.util.io.BukkitObjectOutputStream
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder
 import top.mrxiaom.sqlhelper.SQLHelper
-import top.mrxiaom.sqlhelper.SQLang
 import top.mrxiaom.syncme.command.commands.MainCommand
 import top.mrxiaom.syncme.command.register
+import top.mrxiaom.syncme.database.DatabaseManager
 import top.mrxiaom.syncme.listener.PlayerListener
 import top.mrxiaom.syncme.nms.NMS
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.concurrent.Executors
 import kotlin.coroutines.CoroutineContext
@@ -78,8 +69,9 @@ object SyncMe : JavaPlugin(), CoroutineScope {
             ).ifPresent {
                 reconnect = false
                 sql = it.apply {
-                    val prefix = config.getString("mysql.table-prefix")
-                    SQLang.createTable(connection, "${prefix}inventory")
+                    DatabaseManager.prefix = config.getString("mysql.table-prefix") ?: ""
+                    DatabaseManager.server = config.getString("server") ?: "default"
+                    DatabaseManager.init(connection)
                 }
             }
         }

@@ -8,5 +8,12 @@ mysql:
   # 表名前缀, 如填写 syncme_
   # 则将会创建表 syncme_inventory 等
   table-prefix: ''
+
+# 服务器名，请保证每个服务器有单独的名字。
+# 每次保存数据到数据库时会记录服务器名。
+# 每次进服时检查保存的服务器名和当前服务器名，
+# 如果名称相同将不会拉取数据到本地。
+server: main
+
 # 玩家执行命令没有权限的时候是否不显示权限不足提示而显示帮助命令
 always-show-help-message: true
