@@ -4,11 +4,13 @@ import org.bukkit.command.CommandSender
 import top.mrxiaom.syncme.CommandManager
 import top.mrxiaom.syncme.Lang
 
-interface ICommand {
+interface ICommand
+interface ITabCompleter {
     fun tabComplete(
         sender: CommandSender,
+        cmd: String,
         args: List<String>
-    ): List<String> = listOf()
+    ): List<String>? = null
 }
 
 inline fun <reified T : ICommand> T.register() {

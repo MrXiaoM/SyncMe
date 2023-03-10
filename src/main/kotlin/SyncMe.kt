@@ -97,5 +97,5 @@ object SyncMe : JavaPlugin(), CoroutineScope {
         command: Command,
         alias: String,
         args: Array<out String>
-    ): MutableList<String> = CommandManager.onTabComplete(sender, command.name, args)
+    ): List<String> = CommandManager.onTabComplete(sender, command.name, args)
 }

@@ -9,6 +9,7 @@ import org.bukkit.permissions.Permissible
 import top.mrxiaom.syncme.EnumParamType.*
 import top.mrxiaom.syncme.command.Command
 import top.mrxiaom.syncme.command.ICommand
+import top.mrxiaom.syncme.command.ITabCompleter
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.callSuspend
 import kotlin.reflect.full.declaredMemberFunctions
@@ -18,6 +19,7 @@ import kotlin.reflect.jvm.jvmErasure
 
 object CommandManager {
     var showHelpWhilePermDeny = false
+    val tabCompleter = mutableListOf<ITabCompleter>()
     val parsedCommands = mutableListOf<ParsedCommand>()
     fun onCommand(
         sender: CommandSender,
@@ -42,9 +44,9 @@ object CommandManager {
         sender: CommandSender,
         cmd: String,
         args: Array<out String>
-    ): MutableList<String> {
-        val tab = mutableListOf<String>()
-        return tab
+    ): List<String> {
+        val p = args.toList()
+        return tabCompleter.firstNotNullOfOrNull { it.tabComplete(sender, cmd, p) } ?: listOf()
     }
 
     val regexParam = Regex("\\{.*?}\\+?")
