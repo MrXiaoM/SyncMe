@@ -44,6 +44,9 @@ enum class Lang(
     ),
     COMMAND__ERROR__NO_PLAYER(
         "&e找不到该玩家"
+    ),
+    COMMAND__ERROR__NO_TYPE(
+        "&e找不到这种数据类型"
     );
 
     constructor(
@@ -82,7 +85,7 @@ enum class Lang(
 
     private fun String.replaceArguments(args: Array<out String>): String {
         var str = this
-        for(i in args.indices) {
+        for (i in args.indices) {
             str = replace("\$$i", args[i])
         }
         return str

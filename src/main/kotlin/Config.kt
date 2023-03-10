@@ -8,6 +8,7 @@ enum class Config(
 ) {
     mysql__table_prefix(""),
     server("main"),
+    fallback_type("all"),
     always_show_help_message(true);
     val key = name.lowercase()
         .replace("__", ".")

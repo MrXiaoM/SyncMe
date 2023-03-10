@@ -17,3 +17,6 @@ server: main
 
 # 玩家执行命令没有权限的时候是否不显示权限不足提示而显示帮助命令
 always-show-help-message: true
+
+# 不填写同步数据类型时使用的默认类型
+fallback-type: all
