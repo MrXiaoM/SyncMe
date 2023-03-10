@@ -1,5 +1,6 @@
 package top.mrxiaom.syncme
 
+import kotlinx.coroutines.launch
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.command.CommandSender
@@ -9,6 +10,7 @@ import top.mrxiaom.syncme.EnumParamType.*
 import top.mrxiaom.syncme.command.Command
 import top.mrxiaom.syncme.command.ICommand
 import kotlin.reflect.KFunction
+import kotlin.reflect.full.callSuspend
 import kotlin.reflect.full.declaredMemberFunctions
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.isSubclassOf
@@ -160,8 +162,8 @@ class ParsedCommand(
             )
             return
         }
-        if (func.isSuspend) {
-            TODO("协程支持")
+        if (func.isSuspend) SyncMe.launch {
+            func.callSuspend(instance, sender, *params.toTypedArray())
         } else {
             func.call(instance, sender, *params.toTypedArray())
         }
