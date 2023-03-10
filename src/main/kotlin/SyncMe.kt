@@ -69,8 +69,8 @@ object SyncMe : JavaPlugin(), CoroutineScope {
             ).ifPresent {
                 reconnect = false
                 sql = it.apply {
-                    DatabaseManager.prefix = config.getString("mysql.table-prefix") ?: ""
-                    DatabaseManager.server = config.getString("server") ?: "default"
+                    DatabaseManager.prefix = Config.mysql__table_prefix.get()
+                    DatabaseManager.server = Config.server.get()
                     DatabaseManager.init(connection)
                 }
             }
