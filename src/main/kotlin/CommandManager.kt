@@ -26,7 +26,7 @@ object CommandManager {
         cmd: String,
         args: Array<out String>
     ) {
-        val parsedParams = mutableListOf<Any>()
+        val parsedParams = mutableListOf<Any?>()
         parsedCommands.firstOrNull {
             it.tryParse(sender, cmd, args.joinToString(" "))?.run {
                 parsedParams.addAll(this)
@@ -58,8 +58,9 @@ object CommandManager {
             // 生成参数列表以及正则表达式
             val params = mutableListOf<String>()
             val regex = Regex("^" + (regexParam.split(meta.args) { s, isMatched ->
-                if (isMatched) (if (s.endsWith("+")) "(.*)" else "([^ ]+)").also {
+                if (isMatched) {
                     params.add(s.removeSuffix("+").removeSurrounding("{", "}"))
+                    if (s.endsWith("+")) "?(.*)?" else "([^ ]+)"
                 } else s
             }?.joinToString("") ?: meta.args))
             // 确定第一个参数是否为发送者，以及是否仅有玩家可用该命令
@@ -120,15 +121,22 @@ class ParsedCommand(
     private val paramTypes: Map<Int, EnumParamType>,
     private val func: KFunction<*>
 ) {
-    fun tryParse(sender: CommandSender, cmd: String, params: String): List<Any>? {
+    fun tryParse(sender: CommandSender, cmd: String, params: String): List<Any?>? {
         if (playerOnly && sender !is Player) return null
         if (meta.cmd.isNotEmpty() && !meta.cmd.contains(cmd.lowercase())) return null
         val match = regex.find(params) ?: return null
         if (meta.permission.isNotEmpty() && !sender.hasPermission(meta.permission))
             return listOf(STRING)
-        val paramsList = mutableListOf<Any>()
+        val paramsList = mutableListOf<Any?>()
         var i = 0
         for (s in match.groupValues.drop(1)) {
+            if (s.isBlank()) {
+                if (func.parameters.getOrNull(i)?.isOptional == true) {
+                    paramsList.add(null)
+                    i++
+                    continue
+                }
+            }
             paramsList.add(when (paramTypes[i]) {
                 STRING -> s
                 PLAYER -> Bukkit.getOfflinePlayers().firstOrNull { s == (it.name ?: NULL) } ?: PLAYER
@@ -137,17 +145,18 @@ class ParsedCommand(
                 DOUBLE -> s.toDoubleOrNull() ?: DOUBLE
                 BOOLEAN -> s.toBooleanOrNull() ?: BOOLEAN
                 else -> NULL
-            }.also { i++ })
+            })
+            i++
         }
 
-        val finalParams = Array<Any>(paramIndexMap.size) { }
+        val finalParams = Array<Any?>(paramIndexMap.size) { }
         paramIndexMap.forEach { oldIndex, funcIndex ->
             finalParams[funcIndex] = paramsList[oldIndex]
         }
         return finalParams.toList()
     }
 
-    fun execute(sender: CommandSender, params: List<Any>) {
+    fun execute(sender: CommandSender, params: List<Any?>) {
         params.filterIsInstance<EnumParamType>().firstOrNull()?.apply {
             sender.sendMessage(
                 when (this) {
